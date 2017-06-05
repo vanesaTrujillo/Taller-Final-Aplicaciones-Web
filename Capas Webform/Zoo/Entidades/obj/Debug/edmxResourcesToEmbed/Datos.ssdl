@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="db_zoologicoModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="Animales">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Nombre" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Edad" Type="int" Nullable="false" />
+    <Property Name="PaisOrigen" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Especie" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Subespecie" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="CostumbresAlimenticias" Type="nvarchar" MaxLength="100" Nullable="false" />
+    <Property Name="Tipo" Type="nvarchar" MaxLength="50" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Enfermeria">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="IdAnimal" Type="int" Nullable="false" />
+    <Property Name="FechaIngreso" Type="datetime" Nullable="false" />
+    <Property Name="Diagnostico" Type="nvarchar" MaxLength="200" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Usuarios">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Nombre" Type="nvarchar" MaxLength="20" Nullable="false" />
+    <Property Name="Contrasena" Type="nvarchar" MaxLength="150" Nullable="false" />
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+  </EntityType>
+  <!--Errores durante la generación:
+advertencia 6002: La tabla o vista 'db_zoologico.dbo.Reporte' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
+  <EntityType Name="Reporte">
+    <Key>
+      <PropertyRef Name="Nombre" />
+      <PropertyRef Name="Edad" />
+      <PropertyRef Name="FechaIngreso" />
+      <PropertyRef Name="Diagnostico" />
+    </Key>
+    <Property Name="Nombre" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Edad" Type="int" Nullable="false" />
+    <Property Name="FechaIngreso" Type="datetime" Nullable="false" />
+    <Property Name="Diagnostico" Type="nvarchar" MaxLength="200" Nullable="false" />
+  </EntityType>
+  <Association Name="FK_Enfermeria_Animales">
+    <End Role="Animales" Type="Self.Animales" Multiplicity="1" />
+    <End Role="Enfermeria" Type="Self.Enfermeria" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Animales">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Enfermeria">
+        <PropertyRef Name="IdAnimal" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="db_zoologicoModelStoreContainer">
+    <EntitySet Name="Animales" EntityType="Self.Animales" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Enfermeria" EntityType="Self.Enfermeria" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Usuarios" EntityType="Self.Usuarios" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Reporte" EntityType="Self.Reporte" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [Reporte].[Nombre] AS [Nombre], 
+    [Reporte].[Edad] AS [Edad], 
+    [Reporte].[FechaIngreso] AS [FechaIngreso], 
+    [Reporte].[Diagnostico] AS [Diagnostico]
+    FROM [dbo].[Reporte] AS [Reporte]</DefiningQuery>
+    </EntitySet>
+    <AssociationSet Name="FK_Enfermeria_Animales" Association="Self.FK_Enfermeria_Animales">
+      <End Role="Animales" EntitySet="Animales" />
+      <End Role="Enfermeria" EntitySet="Enfermeria" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
